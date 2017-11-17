@@ -11,9 +11,13 @@ public class GameBehavour : MonoBehaviour {
     bool playerTurn;
     GameDataManager gameDataManager;
     public Text titleTurn;
+    public GameObject playerLayoutAnswers;
+    public Button prefabButtton;
 
-	// Use this for initialization
-	void Start () {
+    public Image gridPlayerQuestions;
+
+    // Use this for initialization
+    void Start () {
 
         gameDataManager = new GameDataManager();
         gameDataManager.LoadData();
@@ -23,10 +27,22 @@ public class GameBehavour : MonoBehaviour {
         else
             titleTurn.text = ENEMYTURN;
 
+        loadList();
+
     }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    public void loadList()
+    {
+        foreach (Sentence sentence in gameDataManager.heroSentences.sentences) {
+            Button newButton = Instantiate(prefabButtton);
+            newButton.transform.SetParent(gridPlayerQuestions.transform, false);
+            newButton.GetComponentInChildren<Text>().text = sentence.text;
+        }
+        
+    }
 }
