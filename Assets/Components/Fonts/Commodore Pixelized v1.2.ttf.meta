@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 27fb39602798a5544b504b749242ada1
+timeCreated: 1510493327
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Commodore 64 Pixelized
+  fontNames:
+  - Commodore 64 Pixelized
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
