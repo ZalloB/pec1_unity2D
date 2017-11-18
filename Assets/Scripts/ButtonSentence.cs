@@ -6,6 +6,7 @@ public class ButtonSentence : MonoBehaviour {
 
     public Sentence assingSentence;
     public GameObject gameBehaviour;
+    public AudioClip interfaceSong;
 
     void Start()
     {
@@ -13,6 +14,7 @@ public class ButtonSentence : MonoBehaviour {
     }
     public void CheckPlayerSelection()
     {
+        SoundManager.instance.RandomizeSfx(interfaceSong);
         StartCoroutine(gameBehaviour.GetComponent<GameBehaviour>().CheckSelection(assingSentence));
        
     }

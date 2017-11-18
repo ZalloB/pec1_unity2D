@@ -16,7 +16,6 @@ public class GameBehaviour : MonoBehaviour {
     public Button prefabButtton;
     public Image gridPlayerQuestions;
 
-
     bool playerTurn;
     Sentence enemySentence;
     public Text enemyText;
@@ -25,6 +24,9 @@ public class GameBehaviour : MonoBehaviour {
     int playerScore;
     int enemyScore;
 
+    public AudioClip failedSentence;
+    public AudioClip successSentence;
+
     // Use this for initialization
     void Start () {
 
@@ -32,7 +34,7 @@ public class GameBehaviour : MonoBehaviour {
 
         playerScore = 0;
         enemyScore = 0;
-        playerTurn = (Random.value * 100 < 50); //set initial turn
+        playerTurn = false; //(Random.value * 100 < 50 to do random) set initial turn
         SetTurn();
 
        
@@ -48,9 +50,10 @@ public class GameBehaviour : MonoBehaviour {
 
     public void checkFinalScreen()
     {
-        Debug.Log("Player Score: " + playerScore);
-        Debug.Log("Enemy Score: " + enemyScore);
-        if (playerScore == MAX_SCORE || enemyScore == MAX_SCORE)
+        Debug.Log("Player Score: " + GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore);
+        Debug.Log("Enemy Score: " + GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore);
+        if (GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore == MAX_SCORE ||
+            GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore == MAX_SCORE)
         {
             GameObject.FindWithTag("SceneLoaderManager").GetComponent<SceneLoadManager>().LoadScreen("End");
         }
@@ -62,7 +65,6 @@ public class GameBehaviour : MonoBehaviour {
         //enabled
         if (playerTurn)
         {
-            titleTurn.text = PLAYER_TURN;
             LoadList(gameDataManager.heroSentences.sentences);
         }
         else
@@ -115,7 +117,7 @@ public class GameBehaviour : MonoBehaviour {
         heroText.text = selectedSentence.text;
         enemyText.text = DEFAULT_TEXT_SENTENCE;
         titleTurn.text = ENEMY_TURN;
-        yield return new WaitForSeconds(2);
+       
 
         if (enemySentence == null)
         {
@@ -126,10 +128,18 @@ public class GameBehaviour : MonoBehaviour {
 
         //si el enemigo dice una frase y nosotros respondemos 
         if (enemySentence.answerId == selectedSentence.id)
-            playerScore++;
+        {
+            GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore++;
+            SoundManager.instance.RandomizeSfx(successSentence);
+        }
         else
-            enemyScore++;
-
+        {
+            GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore++;
+            SoundManager.instance.RandomizeSfx(failedSentence);
+        }
+        yield return new WaitForSeconds(2);
+           
+        titleTurn.text = PLAYER_TURN;
         playerTurn = false;
         SetTurn();
     }
