@@ -27,13 +27,15 @@ public class GameBehaviour : MonoBehaviour {
     public AudioClip failedSentence;
     public AudioClip successSentence;
 
+    public GameObject player;
+    public GameObject enemy;
+
     // Use this for initialization
     void Start () {
 
         gameDataManager.LoadData();
-
-        playerScore = 0;
-        enemyScore = 0;
+        GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore = 0;
+        GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore = 0;
         playerTurn = false; //(Random.value * 100 < 50 to do random) set initial turn
         SetTurn();
 
@@ -44,16 +46,24 @@ public class GameBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        checkFinalScreen();
+        StartCoroutine(CheckFinalScreen());
     }
 
 
-    public void checkFinalScreen()
+    public IEnumerator CheckFinalScreen()
     {
-        Debug.Log("Player Score: " + GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore);
-        Debug.Log("Enemy Score: " + GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore);
-        if (GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore == MAX_SCORE ||
-            GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore == MAX_SCORE)
+        int playerScore = GameObject.Find("ScoreManager").GetComponent<ScoreManager>().playerScore;
+        int enemyScore = GameObject.Find("ScoreManager").GetComponent<ScoreManager>().enemyScore;
+        if (playerScore == MAX_SCORE)
+        {
+            enemy.GetComponent<Animator>().SetBool("enemy_die", true);
+        } else if (enemyScore == MAX_SCORE) {
+            player.GetComponent<Animator>().SetBool("player_dead", true);
+        }
+        yield return new WaitForSeconds(3);
+        
+        if ( playerScore == MAX_SCORE ||
+           enemyScore == MAX_SCORE)
         {
             GameObject.FindWithTag("SceneLoaderManager").GetComponent<SceneLoadManager>().LoadScreen("End");
         }
@@ -142,5 +152,6 @@ public class GameBehaviour : MonoBehaviour {
         titleTurn.text = PLAYER_TURN;
         playerTurn = false;
         SetTurn();
+        
     }
 }
